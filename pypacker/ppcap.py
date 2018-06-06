@@ -180,9 +180,12 @@ def pcap_cb_read(self):
 		raise StopIteration
 
 	d = self._callback_unpack_meta(buf)
+	ts = d[0] * 1000000000 + (d[1] * self._resolution_factor)
 	buf = self._fh.read(d[2])
+	incl_len = d[2]
+	orig_len = d[3]
 
-	return d[0] * 1000000000 + (d[1] * self._resolution_factor), buf
+	return ts, buf, incl_len, orig_len
 
 
 def pcap_cb_btstopkt(self, meta, bts):
